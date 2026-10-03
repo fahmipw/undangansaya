@@ -48,14 +48,21 @@ class FrontController extends Controller
 
         $viewData = compact('invitation', 'settings', 'guestName', 'gallery', 'stories', 'musicRecord', 'guestSlug', 'inv_id', 'invSlug');
 
-        // Pilihan tema via settings: 'theme' => 'default' | 'minecraft' | 'minecraft-adventure'
+        // Pilihan tema via settings: 'theme' => key di bawah.
         // Tema default (front.index) tetap dipakai bila key 'theme' kosong / tidak dikenal.
+        $themeViews = [
+            'minecraft'           => 'front.themes.minecraft',
+            'minecraft-adventure' => 'front.themes.minecraft-adventure',
+            'royal-emerald'       => 'front.themes.royal-emerald',
+            'jawa-premium'        => 'front.themes.jawa-premium',
+            'islamic-elegance'    => 'front.themes.islamic-elegance',
+            'sakura-dream'        => 'front.themes.sakura-dream',
+            'midnight-galaxy'     => 'front.themes.midnight-galaxy',
+            'rustic-boho'         => 'front.themes.rustic-boho',
+        ];
         $theme = $settings['theme'] ?? 'default';
-        if ($theme === 'minecraft') {
-            return view('front.themes.minecraft', $viewData);
-        }
-        if ($theme === 'minecraft-adventure') {
-            return view('front.themes.minecraft-adventure', $viewData);
+        if (isset($themeViews[$theme])) {
+            return view($themeViews[$theme], $viewData);
         }
 
         return view('front.index', $viewData);

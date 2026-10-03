@@ -570,6 +570,12 @@
                                 <option value="default">Klasik (bawaan)</option>
                                 <option value="minecraft">Minecraft</option>
                                 <option value="minecraft-adventure">Minecraft Petualangan (Game)</option>
+                                <option value="royal-emerald">Premium — Royal Emerald &amp; Gold</option>
+                                <option value="jawa-premium">Premium — Jawa Klasik</option>
+                                <option value="islamic-elegance">Premium — Islamic Elegance</option>
+                                <option value="sakura-dream">Premium — Sakura Dream</option>
+                                <option value="midnight-galaxy">Premium — Midnight Galaxy</option>
+                                <option value="rustic-boho">Premium — Rustic Boho</option>
                             </select>
                             <p class="text-[10px] text-gray-500 mt-1">Pilih model tampilan undangan. "Minecraft Petualangan" adalah versi game dengan karakter yang bisa digerakkan.</p>
                         </div>
