@@ -564,6 +564,16 @@
 
                         <input type="hidden" id="set-theme_preset" value="classic-gold">
 
+                        <div class="rsvp-field">
+                            <label>MODEL TAMPILAN TEMA</label>
+                            <select id="set-theme" class="w-full">
+                                <option value="default">Klasik (bawaan)</option>
+                                <option value="minecraft">Minecraft</option>
+                                <option value="minecraft-adventure">Minecraft Petualangan (Game)</option>
+                            </select>
+                            <p class="text-[10px] text-gray-500 mt-1">Pilih model tampilan undangan. "Minecraft Petualangan" adalah versi game dengan karakter yang bisa digerakkan.</p>
+                        </div>
+
                         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                             <!-- Classic Gold -->
                             <div onclick="selectPreset('classic-gold')" id="preset-classic-gold"
@@ -1276,7 +1286,7 @@
         async function loadSettings() {
             const res = await fetch(`api/admin_api.php?action=get_settings&inv_id=${currentInvId}`);
             const data = await res.json();
-            const keys = ['groom_name', 'groom_nickname', 'groom_child_of', 'groom_parents', 'groom_photo', 'bride_name', 'bride_nickname', 'bride_child_of', 'bride_parents', 'bride_photo', 'wedding_date', 'wedding_time_start', 'wedding_time_end', 'wedding_timezone', 'wedding_location', 'wedding_map_link', 'reception_date', 'reception_time_start', 'reception_time_end', 'reception_timezone', 'reception_location', 'reception_map_link', 'gift_bank', 'gift_account', 'gift_owner', 'gift_address', 'gift_maps_link', 'gift_bank_logo', 'wa_template', 'music_volume', 'music_autoplay', 'theme_preset', 'theme_primary', 'theme_secondary', 'theme_background', 'theme_primary_container', 'theme_secondary_container', 'theme_surface_container_low'];
+            const keys = ['groom_name', 'groom_nickname', 'groom_child_of', 'groom_parents', 'groom_photo', 'bride_name', 'bride_nickname', 'bride_child_of', 'bride_parents', 'bride_photo', 'wedding_date', 'wedding_time_start', 'wedding_time_end', 'wedding_timezone', 'wedding_location', 'wedding_map_link', 'reception_date', 'reception_time_start', 'reception_time_end', 'reception_timezone', 'reception_location', 'reception_map_link', 'gift_bank', 'gift_account', 'gift_owner', 'gift_address', 'gift_maps_link', 'gift_bank_logo', 'wa_template', 'music_volume', 'music_autoplay', 'theme_preset', 'theme', 'theme_primary', 'theme_secondary', 'theme_background', 'theme_primary_container', 'theme_secondary_container', 'theme_surface_container_low'];
             keys.forEach(k => {
                 const el = document.getElementById('set-' + k);
                 if (el) el.value = data.data[k] || (k === 'music_volume' ? '50' : (k === 'music_autoplay' ? '1' : ''));

@@ -45,8 +45,20 @@ class FrontController extends Controller
         $musicRecord = $invitation->music()->where('is_active', 1)->first();
         $inv_id = $invitation->id;
         $invSlug = $invitation->slug;
-        
-        return view('front.index', compact('invitation', 'settings', 'guestName', 'gallery', 'stories', 'musicRecord', 'guestSlug', 'inv_id', 'invSlug'));
+
+        $viewData = compact('invitation', 'settings', 'guestName', 'gallery', 'stories', 'musicRecord', 'guestSlug', 'inv_id', 'invSlug');
+
+        // Pilihan tema via settings: 'theme' => 'default' | 'minecraft' | 'minecraft-adventure'
+        // Tema default (front.index) tetap dipakai bila key 'theme' kosong / tidak dikenal.
+        $theme = $settings['theme'] ?? 'default';
+        if ($theme === 'minecraft') {
+            return view('front.themes.minecraft', $viewData);
+        }
+        if ($theme === 'minecraft-adventure') {
+            return view('front.themes.minecraft-adventure', $viewData);
+        }
+
+        return view('front.index', $viewData);
     }
     public function generator(Request $request, $slug)
     {
