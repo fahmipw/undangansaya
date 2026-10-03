@@ -139,12 +139,32 @@ section{padding:70px 26px;text-align:center;position:relative}
 footer{padding:60px 26px 90px;text-align:center}
 footer .aksara{font-size:42px;color:var(--prada-lt)}
 #musBtn{position:fixed;bottom:22px;right:22px;z-index:90;width:52px;height:52px;border-radius:50%;border:1px solid var(--prada);background:rgba(36,16,9,.9);color:var(--prada-lt);font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+
+/* === fitur bawaan default: lightbox, menu, progress, musik === */
+.pbar{position:fixed;top:0;left:0;right:0;height:3px;z-index:96;background:transparent}
+.pbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#d4af37,#f2d67c)}
+.lb{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.92);display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transition:.35s;padding:20px}
+.lb.show{opacity:1;visibility:visible}
+.lb img{max-width:100%;max-height:86vh;border:2px solid #d4af37}
+.lb-x{position:absolute;top:16px;right:22px;font-size:40px;color:#fff;cursor:pointer;line-height:1;z-index:201}
+.fmenu{position:fixed;bottom:14px;left:50%;transform:translateX(-50%);z-index:90;display:flex;gap:2px;background:#241009f2;border:1px solid #d4af3755;border-radius:999px;padding:7px 9px;backdrop-filter:blur(8px);box-shadow:0 10px 30px rgba(0,0,0,.35);max-width:96vw;overflow-x:auto;scrollbar-width:none}
+.fmenu::-webkit-scrollbar{display:none}
+.fmenu a{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:50px;padding:6px 7px;border-radius:12px;color:#f5ead6;opacity:.6;text-decoration:none;font-size:9px;letter-spacing:.06em;transition:.25s;font-family:'Jost',sans-serif}
+.fmenu a i{font-style:normal;font-size:17px;line-height:1}
+.fmenu a.active{opacity:1;background:#d4af372e;color:#f2d67c}
+#musBtn.playing{outline:2px solid #f2d67c;outline-offset:2px}
+.att-toggle{display:flex;gap:10px}
+.att-toggle button{flex:1;padding:13px 8px;border:1px solid #d4af37;background:transparent;color:#f5ead6;font-family:'Jost',sans-serif;font-size:14px;cursor:pointer;transition:.25s;border-radius:10px}
+.att-toggle button.on{background:#d4af37;color:#241009;font-weight:500}
+.wish-empty{text-align:center;opacity:.6;font-size:14px;padding:12px}
+
 .rv{opacity:0;transform:translateY(36px);transition:opacity .9s,transform .9s}
 .rv.on{opacity:1;transform:none}
 @media(min-width:640px){.hero-names{font-size:66px}}
 </style>
 </head>
 <body>
+<div class="pbar"><i id="pbarFill"></i></div>
 <canvas id="petal"></canvas>
 <div class="wrap">
 
@@ -175,7 +195,7 @@ footer .aksara{font-size:42px;color:var(--prada-lt)}
   </div>
 </section>
 
-<section>
+<section id="mempelai">
   <div class="rv"><div class="sec-kicker">Sugeng Rawuh</div><div class="sec-title serif">Mempelai</div><div class="ukel">❋</div></div>
   <div class="couple-card rv">
     @if($bridePhoto)<img class="photo" src="{{ $bridePhoto }}" alt="{{ $brideFull }}">@else<div class="photo-fallback">{{ $brideInitial }}</div>@endif
@@ -190,7 +210,7 @@ footer .aksara{font-size:42px;color:var(--prada-lt)}
   </div>
 </section>
 
-<section>
+<section id="acara">
   <div class="rv"><div class="sec-kicker">Wanci &amp; Papan</div><div class="sec-title serif">Acara</div><div class="ukel">❋</div></div>
   <div class="event rv">
     <h3>Akad Nikah</h3>
@@ -207,7 +227,7 @@ footer .aksara{font-size:42px;color:var(--prada-lt)}
 </section>
 
 @if(!empty($gallery))
-<section>
+<section id="galeri">
   <div class="rv"><div class="sec-kicker">Momen</div><div class="sec-title serif">Galeri</div><div class="ukel">❋</div></div>
   <div class="g-grid rv">
     @foreach(array_slice($gallery, 0, 8) as $img)<img src="{{ $img }}" alt="Galeri" loading="lazy">@endforeach
@@ -216,7 +236,7 @@ footer .aksara{font-size:42px;color:var(--prada-lt)}
 @endif
 
 @if(!empty($stories) && count($stories))
-<section>
+<section id="kisah">
   <div class="rv"><div class="sec-kicker">Lampah Katresnan</div><div class="sec-title serif">Kisah Kami</div><div class="ukel">❋</div></div>
   <div class="tl">
     @foreach($stories as $st)
@@ -226,17 +246,23 @@ footer .aksara{font-size:42px;color:var(--prada-lt)}
 </section>
 @endif
 
-<section>
+<section id="rsvp">
   <div class="rv"><div class="sec-kicker">Konfirmasi</div><div class="sec-title serif">RSVP</div><div class="ukel">❋</div></div>
-  <form id="rsvpForm" class="rv" onsubmit="return sendRSVP(event)">
-    <div class="field"><label>Nama Lengkap</label><input required name="name" placeholder="Nama Anda"></div>
-    <div class="field"><label>Kehadiran</label><select name="status"><option value="Hadir">Hadir</option><option value="Tidak Hadir">Berhalangan</option></select></div>
-    <div class="field"><label>Jumlah Tamu</label><input type="number" name="guest_count" min="1" value="1"></div>
-    <button class="btn" type="submit">Kirim Konfirmasi</button>
+  <form id="rsvpForm" onsubmit="return sendRSVP(event)">
+    <div class="field"><label>Nama Lengkap</label><input required id="rsvpNama" placeholder="Nama Anda" autocomplete="name"></div>
+    <div class="field"><label>Konfirmasi Kehadiran</label>
+      <div class="att-toggle">
+        <button type="button" data-att="hadir" onclick="setAtt('hadir')">Hadir</button>
+        <button type="button" data-att="tidak" onclick="setAtt('tidak')">Berhalangan</button>
+      </div>
+    </div>
+    <div class="field" id="alasanWrap" style="display:none"><label>Alasan</label><textarea id="rsvpAlasan" rows="2" placeholder="Alasan berhalangan..."></textarea></div>
+    <div class="field"><label>Jumlah Tamu</label><input type="number" id="rsvpCount" min="1" max="20" value="1"></div>
+    <button class="btn" type="submit" id="rsvpBtn">Kirim Konfirmasi</button>
   </form>
 </section>
 
-<section>
+<section id="ucapan">
   <div class="rv"><div class="sec-kicker">Donga Pangestu</div><div class="sec-title serif">Ucapan</div><div class="ukel">❋</div></div>
   <div id="wishList" class="rv"></div>
   <form id="wishForm" class="rv" onsubmit="return sendWish(event)" style="margin-top:22px">
@@ -247,7 +273,7 @@ footer .aksara{font-size:42px;color:var(--prada-lt)}
 </section>
 
 @if(!empty($accounts) || mcGet('gift_address'))
-<section>
+<section id="gift">
   <div class="rv"><div class="sec-kicker">Tanda Asih</div><div class="sec-title serif">Hadiah</div><div class="ukel">❋</div></div>
   @foreach($accounts as $a)
   <div class="bank rv"><div class="bk">{{ $a['bank'] }}</div><div class="no">{{ $a['no'] }}</div><div class="an">a.n. {{ $a['an'] }}</div>
@@ -265,18 +291,17 @@ footer .aksara{font-size:42px;color:var(--prada-lt)}
 </footer>
 </div>
 
-@if($musicUrl)
-<audio id="mus" loop src="{{ $musicUrl }}"></audio>
-<button id="musBtn" onclick="toggleMus()">♪</button>
-@endif
+<button id="musBtn" onclick="toggleMus()" style="display:none" aria-label="Putar musik">&#9834;</button>
+
+
+<div class="lb" id="lb"><span class="lb-x" onclick="closeLb()">&times;</span><img id="lbImg" src="" alt="Foto"></div>
+<nav class="fmenu" id="fmenu" aria-label="Menu undangan"></nav>
 
 <script>
 const INV_ID = {{ (int)$invId }};
 function openInv(){document.getElementById('cover').classList.add('open');document.body.style.overflow='';const m=document.getElementById('mus');if(m)m.play().catch(()=>{});}
 document.body.style.overflow='hidden';
-const target = new Date("{{ $countdownISO }}").getTime();
-setInterval(()=>{const d=target-Date.now();if(d<0)return;
-  cdD.textContent=Math.floor(d/864e5);cdH.textContent=Math.floor(d/36e5)%24;cdM.textContent=Math.floor(d/6e4)%60;cdS.textContent=Math.floor(d/1e3)%60;},1000);
+/* countdown diganti modul bawaan (resepsi+timezone) */
 const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target)}}),{threshold:.12});
 document.querySelectorAll('.rv').forEach(el=>io.observe(el));
 // kelopak melati
@@ -300,5 +325,174 @@ loadWishes();
 function copyNo(t){navigator.clipboard.writeText(t).then(()=>alert('Nomor tersalin!'));}
 function toggleMus(){const m=document.getElementById('mus');if(m.paused){m.play();musBtn.style.opacity=1}else{m.pause();musBtn.style.opacity=.5}}
 </script>
+
+<script>
+/* === Modul fitur bawaan default: musik API, lightbox, menu, countdown resepsi, RSVP & ucapan === */
+(function(){
+  var tz = "{{ mcGet('reception_timezone','WIB') }}";
+  var off = tz === 'WIT' ? '+09:00' : (tz === 'WITA' ? '+08:00' : '+07:00');
+  var target = new Date("{{ $rDate }}T{{ $rTimeS }}:00" + off).getTime();
+  function pad(n){ return String(n).padStart(2,'0'); }
+  function tick(){
+    var d = target - Date.now(); if (d < 0) d = 0;
+    var cdD=document.getElementById('cdD'),cdH=document.getElementById('cdH'),
+        cdM=document.getElementById('cdM'),cdS=document.getElementById('cdS');
+    if(!cdD) return;
+    cdD.textContent = Math.floor(d/864e5);
+    cdH.textContent = pad(Math.floor(d/36e5)%24);
+    cdM.textContent = pad(Math.floor(d/6e4)%60);
+    cdS.textContent = pad(Math.floor(d/1e3)%60);
+  }
+  tick(); setInterval(tick, 1000);
+})();
+
+var bgMus = null, musPlaying = false, musCfg = { file_path:'', volume:.5, autoplay:true };
+async function initMus(){
+  var btn = document.getElementById('musBtn');
+  try{
+    var r = await fetch('/api/music.php?inv_id=' + INV_ID);
+    var d = await r.json();
+    if (d.success && d.music && d.music.file_path) { musCfg = d.music; }
+    else { if(btn) btn.style.display='none'; return; }
+  }catch(e){ if(btn) btn.style.display='none'; return; }
+  bgMus = new Audio(musCfg.file_path); bgMus.loop = true; bgMus.volume = 0;
+  window.bgMusic = bgMus;
+  if(btn) btn.style.display = 'flex';
+}
+function fadeMus(a,t){ a.volume = 0; var st = setInterval(function(){
+  a.volume = Math.min(t, a.volume + t/20); if(a.volume >= t) clearInterval(st); }, 25); }
+function startMus(){
+  if(!bgMus) return;
+  bgMus.play().then(function(){
+    musPlaying = true; window.musicPlaying = true;
+    var b = document.getElementById('musBtn'); if(b) b.classList.add('playing');
+    fadeMus(bgMus, parseFloat(musCfg.volume) || .5);
+  }).catch(function(){});
+}
+function toggleMus(){
+  var b = document.getElementById('musBtn');
+  if(!bgMus) return;
+  if(!musPlaying){ startMus(); }
+  else { bgMus.pause(); musPlaying = false; window.musicPlaying = false; if(b) b.classList.remove('playing'); }
+}
+(function(){
+  var prevOpen = window.openInv;
+  window.openInv = function(){
+    document.getElementById('cover').classList.add('open');
+    document.body.style.overflow = '';
+    if(musCfg.autoplay && bgMus) startMus();
+  };
+  initMus();
+})();
+
+function openLb(src){
+  if(!src) return;
+  document.getElementById('lbImg').src = src;
+  document.getElementById('lb').classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+function closeLb(){
+  document.getElementById('lb').classList.remove('show');
+  document.body.style.overflow = '';
+}
+document.querySelectorAll('.g-grid img, .photo, .planet, .frame img, .arch img').forEach(function(im){
+  if(im.tagName !== 'IMG' || !im.getAttribute('src')) return;
+  im.style.cursor = 'zoom-in';
+  im.addEventListener('click', function(){ openLb(im.src); });
+});
+document.getElementById('lb').addEventListener('click', function(e){ if(e.target === this) closeLb(); });
+
+var __att = '';
+function setAtt(v){
+  __att = v;
+  document.querySelectorAll('.att-toggle button').forEach(function(b){
+    b.classList.toggle('on', b.dataset.att === v);
+  });
+  document.getElementById('alasanWrap').style.display = (v === 'tidak') ? 'block' : 'none';
+}
+async function sendRSVP(e){
+  e.preventDefault();
+  var nama = document.getElementById('rsvpNama').value.trim();
+  var jumlah = parseInt(document.getElementById('rsvpCount').value, 10) || 1;
+  var alasan = (__att === 'tidak') ? document.getElementById('rsvpAlasan').value.trim() : '';
+  if(!nama){ alert('Mohon isi nama terlebih dahulu.'); return false; }
+  if(!__att){ alert('Mohon pilih status kehadiran.'); return false; }
+  var btn = document.getElementById('rsvpBtn'); btn.disabled = true;
+  try{
+    var r = await fetch('/api/rsvp.php', { method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ invitation_id: INV_ID, nama: nama, jumlah_tamu: jumlah, status: __att, alasan: alasan }) });
+    var j = await r.json();
+    if(!j.success) throw new Error(j.message || 'Gagal menyimpan');
+    var msg = 'Halo, saya *' + nama + '* ingin mengkonfirmasi kehadiran.\n\n'
+      + 'Status : ' + (__att === 'hadir' ? 'HADIR \u2705' : 'TIDAK HADIR \u274C')
+      + (__att === 'hadir' ? '\nJumlah Tamu : ' + jumlah + ' orang' : '')
+      + (alasan ? '\nAlasan : ' + alasan : '')
+      + '\n\nTerima kasih atas undangannya \uD83D\uDE4F';
+    window.open('https://wa.me/6288210841990?text=' + encodeURIComponent(msg), '_blank');
+    document.getElementById('rsvpNama').value = '';
+    document.getElementById('rsvpAlasan').value = '';
+    document.getElementById('rsvpCount').value = '1';
+    setAtt('');
+  }catch(err){ alert('Gagal: ' + err.message); }
+  btn.disabled = false;
+  return false;
+}
+
+async function loadWishes(){
+  try{
+    var r = await fetch('/api/ucapan.php?inv_id=' + INV_ID + '&limit=20');
+    var d = await r.json();
+    var rows = d.data || [];
+    document.getElementById('wishList').innerHTML = rows.map(function(w){
+      return '<div class="wish"><b>' + esc(w.nama) + '</b><p>' + esc(w.pesan) + '</p></div>';
+    }).join('') || '<p class="wish-empty">Belum ada ucapan.</p>';
+  }catch(e){}
+}
+async function sendWish(e){
+  e.preventDefault();
+  var f = e.target;
+  var nama = f.name.value.trim(), pesan = f.message.value.trim();
+  if(!nama || !pesan){ alert('Mohon isi nama dan ucapan.'); return false; }
+  try{
+    var r = await fetch('/api/ucapan.php', { method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ invitation_id: INV_ID, nama: nama, pesan: pesan }) });
+    var j = await r.json();
+    if(!j.success) throw new Error(j.message || 'Gagal mengirim');
+    f.reset(); loadWishes();
+  }catch(err){ alert('Gagal: ' + err.message); }
+  return false;
+}
+
+(function(){
+  var SECS = [['hero','\u2302','Awal'],['mempelai','\u2665','Mempelai'],['galeri','\u25A6','Galeri'],
+              ['kisah','\u270E','Kisah'],['acara','\u25F7','Acara'],['rsvp','\u2713','RSVP'],
+              ['gift','\u2726','Gift'],['ucapan','\u2709','Ucapan']];
+  var nav = document.getElementById('fmenu');
+  var items = [];
+  SECS.forEach(function(s){
+    var el = document.getElementById(s[0]); if(!el) return;
+    var a = document.createElement('a'); a.href = '#' + s[0];
+    a.innerHTML = '<i>' + s[1] + '</i><span>' + s[2] + '</span>';
+    a.addEventListener('click', function(e){ e.preventDefault(); el.scrollIntoView({behavior:'smooth'}); });
+    nav.appendChild(a); items.push([a, el]);
+  });
+  if(!items.length){ nav.style.display = 'none'; return; }
+  var io = new IntersectionObserver(function(es){
+    es.forEach(function(en){
+      if(en.isIntersecting){
+        items.forEach(function(it){ it[0].classList.toggle('active', it[1] === en.target); });
+      }
+    });
+  }, { rootMargin:'-40% 0px -50% 0px' });
+  items.forEach(function(it){ io.observe(it[1]); });
+  window.addEventListener('scroll', function(){
+    var h = document.documentElement;
+    var max = h.scrollHeight - h.clientHeight;
+    var p = max > 0 ? (h.scrollTop / max * 100) : 0;
+    document.getElementById('pbarFill').style.width = p + '%';
+  }, { passive:true });
+})();
+</script>
+
 </body>
 </html>
