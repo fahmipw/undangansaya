@@ -249,9 +249,9 @@ const MC = {
   brideNick: @json($brideNick), groomNick: @json($groomNick),
   brideFull: @json($brideFull), groomFull: @json($groomFull),
   dateText: @json(mcaDate($wDate)),
-  akad: { date: @json(mcaDate($wDate)), time: @json($wTime.' – '.$wTimeE.' WIB'),
+  akad: { date: @json(mcaDate($wDate)), time: @json($wTime.' – '.$wTimeE.' '.mcaGet('wedding_timezone','WIB')),
     venue: @json(mcaGet('wedding_location','Kediaman Mempelai')), maps: @json(mcaGet('wedding_map_link','')) },
-  resepsi: { date: @json(mcaDate($rDate)), time: @json($rTimeS.' – '.$rTimeE.' WIB'),
+  resepsi: { date: @json(mcaDate($rDate)), time: @json($rTimeS.' – '.$rTimeE.' '.mcaGet('wedding_timezone','WIB')),
     venue: @json(mcaGet('reception_location', mcaGet('wedding_location','Kediaman Mempelai'))), maps: @json(mcaGet('reception_map_link','')) }
 };
 const $=s=>document.querySelector(s), $$=s=>Array.from(document.querySelectorAll(s));
@@ -578,7 +578,8 @@ gift:()=>`<h2 class="ptitle">PETI HARTA</h2><p class="psub">Klik petinya untuk m
 <div class="px" style="font-family:'Press Start 2P',monospace;font-size:9px;color:#5a5a5a" id="chL2">PETI TERKUNCI</div></div>
 <div class="gift-grid" id="ga2" hidden>
 @foreach($accounts as $i => $a)
-<div class="acct"><div class="bank">{{ $a['bank'] }}</div><div class="no" id="gno{{ $i }}">{{ $a['no'] }}</div>
+<div class="acct"><div class="bank">{{ $a['bank'] }}</div>
+    @if(mcaGet('gift_bank_logo'))<img src="{{ mcaGet('gift_bank_logo') }}" alt="Logo bank" style="height:36px;max-width:150px;object-fit:contain;margin:10px auto 0;display:block">@endif<div class="no" id="gno{{ $i }}">{{ $a['no'] }}</div>
 <div class="an">{{ $a['an'] }}</div>
 <button class="mc-btn gold" style="font-size:10px;padding:10px 14px" data-g="{{ $i }}">SALIN</button></div>
 @endforeach

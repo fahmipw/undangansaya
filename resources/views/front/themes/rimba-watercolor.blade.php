@@ -173,6 +173,7 @@ footer .serif{font-size:38px;color:var(--perunggu)}
 .att-toggle button{flex:1;padding:13px 8px;border:1px solid #c9a24b;background:transparent;color:#f5ead0;font-family:'Jost',sans-serif;font-size:14px;cursor:pointer;transition:.25s;border-radius:10px}
 .att-toggle button.on{background:#c9a24b;color:#22392c;font-weight:500}
 .wish-empty{text-align:center;opacity:.6;font-size:14px;padding:12px}
+body.locked #fmenu,body.locked #musBtn,body.locked .pbar{opacity:0 !important;visibility:hidden !important;pointer-events:none !important}
 
 .rv{opacity:0;transform:translateY(36px);transition:opacity .9s,transform .9s}
 .rv.on{opacity:1;transform:none}
@@ -364,14 +365,14 @@ footer .serif{font-size:38px;color:var(--perunggu)}
 <div class="card event rv">
 <h3>Akad Nikah</h3>
 <div class="date">{{ mcDate($wDate) }}</div>
-<div class="time">{{ $wTime }} — {{ $wTimeE }} WIB</div>
+<div class="time">{{ $wTime }} — {{ $wTimeE }} {{ mcGet('wedding_timezone','WIB') }}</div>
 <div class="loc">{{ mcGet('wedding_location', 'Kediaman Mempelai') }}</div>
 @if(mcGet('wedding_map_link'))<a class="btn-line" target="_blank" href="{{ mcGet('wedding_map_link') }}">Lihat Peta</a>@endif
 </div>
 <div class="card event rv">
 <h3>Resepsi</h3>
 <div class="date">{{ mcDate($rDate) }}</div>
-<div class="time">{{ $rTimeS }} — {{ $rTimeE }} WIB</div>
+<div class="time">{{ $rTimeS }} — {{ $rTimeE }} {{ mcGet('wedding_timezone','WIB') }}</div>
 <div class="loc">{{ mcGet('reception_location', mcGet('wedding_location', 'Kediaman Mempelai')) }}</div>
 @if(mcGet('reception_map_link'))<a class="btn-line" target="_blank" href="{{ mcGet('reception_map_link') }}">Lihat Peta</a>@endif
 </div>
@@ -441,12 +442,14 @@ footer .serif{font-size:38px;color:var(--perunggu)}
 @foreach($accounts as $a)
 <div class="card bank rv" style="background:rgba(247,244,234,.06);border:1px dashed rgba(201,162,75,.55)">
 <div class="bk" style="color:var(--sage)">{{ $a['bank'] }}</div>
+    @if(mcGet('gift_bank_logo'))<img src="{{ mcGet('gift_bank_logo') }}" alt="Logo bank" style="height:36px;max-width:150px;object-fit:contain;margin:10px auto 0;display:block">@endif
 <div class="no" style="color:#f2d67c">{{ $a['no'] }}</div>
 <div class="an" style="color:rgba(245,234,208,.7)">a.n. {{ $a['an'] }}</div>
 <button class="btn-line copy" onclick="copyNo('{{ $a['no'] }}')" style="color:#f2d67c;border-color:var(--emas)">Salin Nomor</button>
 </div>
 @endforeach
-@if(mcGet('gift_address'))<div class="card bank rv" style="background:rgba(247,244,234,.06);border:1px dashed rgba(201,162,75,.55)"><div class="bk" style="color:var(--sage)">Kirim Hadiah Fisik</div><p style="font-size:14px;color:rgba(245,234,208,.7);margin-top:10px;line-height:1.7">{{ mcGet('gift_address') }}</p></div>@endif
+@if(mcGet('gift_address'))<div class="card bank rv" style="background:rgba(247,244,234,.06);border:1px dashed rgba(201,162,75,.55)"><div class="bk" style="color:var(--sage)">Kirim Hadiah Fisik</div><p style="font-size:14px;color:rgba(245,234,208,.7);margin-top:10px;line-height:1.7">{{ mcGet('gift_address') }}</p>
+    @if(mcGet('gift_maps_link'))<div style="margin-top:12px"><a href="{{ mcGet('gift_maps_link') }}" target="_blank" style="display:inline-block;padding:10px 26px;border:1px solid currentColor;border-radius:999px;font-size:11px;letter-spacing:.24em;text-transform:uppercase;text-decoration:none;opacity:.85">Lihat Peta</a></div>@endif</div>@endif
 </section>
 @endif
 
@@ -570,7 +573,9 @@ function toggleMus(){
   else { bgMus.pause(); musPlaying = false; window.musicPlaying = false; if(b) b.classList.remove('playing'); }
 }
 (function(){
+  document.body.classList.add('locked');
   window.openInv = function(){
+    document.body.classList.remove('locked');
     document.getElementById('cover').classList.add('open');
     document.body.style.overflow = '';
     if(musCfg.autoplay && bgMus) startMus();
