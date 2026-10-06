@@ -59,6 +59,7 @@ class FrontController extends Controller
             'sakura-dream'        => 'front.themes.sakura-dream',
             'midnight-galaxy'     => 'front.themes.midnight-galaxy',
             'rustic-boho'         => 'front.themes.rustic-boho',
+            'minang-gadang'       => 'front.themes.minang-gadang',
         ];
         $theme = $settings['theme'] ?? 'default';
         if (isset($themeViews[$theme])) {
