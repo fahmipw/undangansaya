@@ -61,6 +61,10 @@ class FrontController extends Controller
             'rustic-boho'         => 'front.themes.rustic-boho',
             'minang-gadang'       => 'front.themes.minang-gadang',
             'taman-janur'         => 'front.themes.taman-janur',
+            'senja-pesisir'       => 'front.themes.senja-pesisir',
+            'empat-musim'         => 'front.themes.empat-musim',
+            'bawah-laut'          => 'front.themes.bawah-laut',
+            'gunung-berkabut'     => 'front.themes.gunung-berkabut',
         ];
         $theme = $settings['theme'] ?? 'default';
         if (isset($themeViews[$theme])) {
