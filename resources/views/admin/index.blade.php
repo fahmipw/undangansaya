@@ -577,6 +577,7 @@
                                 <option value="midnight-galaxy">Premium — Midnight Galaxy</option>
                                 <option value="rustic-boho">Premium — Rustic Boho</option>
                                 <option value="minang-gadang">Premium — Minang Gadang</option>
+                                <option value="taman-janur">Premium — Taman Janur</option>
                             </select>
                             <p class="text-[10px] text-gray-500 mt-1">Pilih model tampilan undangan. "Minecraft Petualangan" adalah versi game dengan karakter yang bisa digerakkan.</p>
                         </div>
