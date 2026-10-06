@@ -65,6 +65,7 @@ class FrontController extends Controller
             'empat-musim'         => 'front.themes.empat-musim',
             'bawah-laut'          => 'front.themes.bawah-laut',
             'gunung-berkabut'     => 'front.themes.gunung-berkabut',
+            'sogan-parallax'      => 'front.themes.sogan-parallax',
         ];
         $theme = $settings['theme'] ?? 'default';
         if (isset($themeViews[$theme])) {

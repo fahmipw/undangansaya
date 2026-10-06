@@ -582,6 +582,7 @@
                                 <option value="empat-musim">Premium — Empat Musim</option>
                                 <option value="bawah-laut">Premium — Bawah Laut</option>
                                 <option value="gunung-berkabut">Premium — Gunung Berkabut</option>
+                                <option value="sogan-parallax">Premium — Sogan Parallax</option>
                             </select>
                             <p class="text-[10px] text-gray-500 mt-1">Pilih model tampilan undangan. "Minecraft Petualangan" adalah versi game dengan karakter yang bisa digerakkan.</p>
                         </div>
