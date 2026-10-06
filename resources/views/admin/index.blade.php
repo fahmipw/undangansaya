@@ -584,6 +584,11 @@
                                 <option value="gunung-berkabut">Premium — Gunung Berkabut</option>
                                 <option value="sogan-parallax">Premium — Sogan Parallax</option>
                                 <option value="rimba-watercolor">Premium — Rimba Watercolor</option>
+                                <option value="neon-metropolis">Premium — Neon Metropolis</option>
+                                <option value="arabian-nights">Premium — Arabian Nights</option>
+                                <option value="origami-dreams">Premium — Origami Dreams</option>
+                                <option value="galaksi-cinta">Premium — Galaksi Cinta</option>
+                                <option value="winter-aurora">Premium — Winter Aurora</option>
                             </select>
                             <p class="text-[10px] text-gray-500 mt-1">Pilih model tampilan undangan. "Minecraft Petualangan" adalah versi game dengan karakter yang bisa digerakkan.</p>
                         </div>

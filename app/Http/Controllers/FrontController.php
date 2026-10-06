@@ -67,6 +67,11 @@ class FrontController extends Controller
             'gunung-berkabut'     => 'front.themes.gunung-berkabut',
             'sogan-parallax'      => 'front.themes.sogan-parallax',
             'rimba-watercolor'    => 'front.themes.rimba-watercolor',
+            'neon-metropolis'     => 'front.themes.neon-metropolis',
+            'arabian-nights'      => 'front.themes.arabian-nights',
+            'origami-dreams'      => 'front.themes.origami-dreams',
+            'galaksi-cinta'       => 'front.themes.galaksi-cinta',
+            'winter-aurora'       => 'front.themes.winter-aurora',
         ];
         $theme = $settings['theme'] ?? 'default';
         if (isset($themeViews[$theme])) {
