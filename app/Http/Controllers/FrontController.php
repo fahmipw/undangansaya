@@ -66,6 +66,7 @@ class FrontController extends Controller
             'bawah-laut'          => 'front.themes.bawah-laut',
             'gunung-berkabut'     => 'front.themes.gunung-berkabut',
             'sogan-parallax'      => 'front.themes.sogan-parallax',
+            'rimba-watercolor'    => 'front.themes.rimba-watercolor',
         ];
         $theme = $settings['theme'] ?? 'default';
         if (isset($themeViews[$theme])) {
